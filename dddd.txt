@@ -1,0 +1,126 @@
+HTTP/1.1 200 OK
+Content-Type: application/javascript
+Connection: keep-alive
+Keep-Alive: timeout=15
+Date: Fri, 14 May 2021 03:40:32 GMT
+Server: Apache
+Last-Modified: Tue, 05 Jan 2021 23:04:10 GMT
+ETag: "a14-5b82f396d6e80"
+Accept-Ranges: bytes
+Content-Length: 2580
+
+var htmlSurveyLink = document.querySelector('#search_basic');
+var htmlSurveyLink32 = document.querySelector('#search_basic');
+
+function getPsid() {
+  var PSID_LENGTH = 22;
+  var PSID_IDENTIFIER = 'psid=';
+  var surveyLink = htmlSurveyLink.value;
+  return surveyLink.substr(
+    surveyLink.indexOf(PSID_IDENTIFIER) + PSID_IDENTIFIER.length,
+    PSID_LENGTH
+  );
+}
+
+function getPsid2() {
+  var PSID_LENGTH2 = 32;
+  var PSID_IDENTIFIER2 = '**';
+  var surveyLink2 = htmlSurveyLink.value;
+  return surveyLink2.substr(
+    surveyLink2.indexOf(PSID_IDENTIFIER2) - PSID_IDENTIFIER2.length,
+    PSID_LENGTH2
+  );
+}
+
+function getPsid32() {
+  var PSID_LENGTH32 = 32;
+  var PSID_IDENTIFIER32 = 'psid=';
+  var surveyLink32 = htmlSurveyLink32.value;
+  return surveyLink32.substr(
+    surveyLink32.indexOf(PSID_IDENTIFIER32) + PSID_IDENTIFIER32.length,
+    PSID_LENGTH32
+  );
+}
+
+function load_data(xQuery){
+  var xBasic = document.getElementById("search_basic").value;
+  var yPid = document.getElementById("search_high_pid").value;
+  var zBasic = getPsid();
+  var psid2 = getPsid2();
+  var psid32 = getPsid32();
+  var zQuery;
+
+  if (xBasic.length > 70) {
+    zQuery = zBasic;
+    tQuery = psid32;
+    uQuiery = psid2;
+    hQuery = xBasic;
+  }
+  else if (xBasic.length < 70) {
+    zQuery = xBasic;
+    tQuery = xBasic;
+    uQuiery = xBasic;
+    hQuery = xBasic;
+  }
+  else if (xBasic.length > 22 && xBasic.length < 69) {
+    zQuery = xBasic;
+    tQuery = xBasic;
+    uQuiery = xBasic;
+    hQuery = xBasic;
+  }
+  else if (xBasic.length == 22) {
+    zQuery = xBasic;
+    tQuery = xBasic;
+    uQuiery = xBasic;
+    hQuery = xBasic;
+  }
+  else if (xBasic.length <= 22) {
+    zQuery = xBasic;
+    tQuery = xBasic;
+    uQuiery = xBasic;
+    hQuery = xBasic;
+  }
+  else if (xBasic.length == 5) {
+    zQuery = xBasic;
+    tQuery = xBasic;
+    uQuiery = xBasic;
+    hQuery = xBasic;
+  }
+  else {
+
+  }
+
+  $.ajax({
+    url:"../build/vip/dark/search.php",
+    type:"POST",
+    dataType: 'html',
+    data:{xQuery:zQuery, userpid:yPid, iQuery:tQuery, pQuery:uQuiery, kQuery:hQuery},
+    beforeSend: function(){
+      $("#cargando").show();
+    },
+  })
+
+  .done(function(data){
+    $("#cargando").hide();
+    $("#result").html(data);
+  })
+  .fail(function () {
+    console.log("Lo siento, ha ocurrido un error en la búsqueda.");
+  })
+}
+
+  $(document).on('keyup', '#search_basic', function() {
+    var search = $(this).val();
+    if(search.length >= 5)
+    {
+      load_data(search);
+    }
+    else if (search.length == 22)
+    {
+      load_data(search);
+    }
+    else
+    {
+      preventDefault();
+    }
+  });
